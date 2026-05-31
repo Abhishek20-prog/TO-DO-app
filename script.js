@@ -3,8 +3,11 @@ let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 const btn = document.getElementById("addBtn");
 const input = document.getElementById("taskInput");
 let list = document.getElementById("taskList")
-let compl= document.querySelector(".complete-btn")
-let del= document.querySelector(".delete-btn")
+let l;
+let div;
+let compl;
+let del;
+
 let todo=document.querySelector(".todo-container")
 
 btn.addEventListener("click", () => {
@@ -16,9 +19,26 @@ btn.addEventListener("click", () => {
 
     localStorage.setItem("tasks", JSON.stringify(tasks));
     tasks.forEach(task => {
-        let l = document.createElement("li");
-        let div = document.createElement("div");
-        taskList.display="initial";
+         l = document.createElement("li");
+         div = document.createElement("div");
+         compl =  document.createElement("button");
+         del =  document.createElement("button");
+        compl.classList.add("complete-btn");
+        del.classList.add("delete-btn");
+        compl.style.visibility="visible";
+        compl.innerText="✔";
+        del.style.visibility="visible";
+        del.innerText="✖";
+       div.classList.add("actions");
+       div.appendChild(compl);
+       div.appendChild(del);
+        l.textContent=(task);
+        l.appendChild(div);
+        
+        l.classList.add("task")
+        list.appendChild(l);
+        list.style.display="initial";
+        todo.appendChild(list);
         
     });
   
@@ -27,3 +47,5 @@ btn.addEventListener("click", () => {
 
     input.value = "";
 });
+
+// localStorage.removeItem("tasks");
