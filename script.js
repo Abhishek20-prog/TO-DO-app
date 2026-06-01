@@ -1,51 +1,53 @@
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-
 const btn = document.getElementById("addBtn");
 const input = document.getElementById("taskInput");
-let list = document.getElementById("taskList")
-let l;
-let div;
-let compl;
-let del;
+const list = document.getElementById("taskList");
 
-let todo=document.querySelector(".todo-container")
+function renderTasks() {
+    list.innerHTML = "";
+    tasks.forEach((task, index) => {
+        const l = document.createElement("li");
+        const div = document.createElement("div");
+        const compl = document.createElement("button");
+        const del = document.createElement("button");
+        
+        compl.classList.add("complete-btn");
+        del.classList.add("delete-btn");
+        compl.innerText = "✔";
+        del.innerText = "✖";
+        
+        div.classList.add("actions");
+        div.appendChild(compl);
+        div.appendChild(del);
+        
+        l.textContent = task;
+        l.appendChild(div);
+        l.classList.add("task");
+        
+        compl.addEventListener("click", () => {
+            l.classList.toggle("completed");
+        });
+        
+        del.addEventListener("click", () => {
+            tasks.splice(index, 1);
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+            renderTasks();
+        });
+        
+        list.appendChild(l);
+    });
+    
+    list.style.display = tasks.length > 0 ? "block" : "none";
+}
 
 btn.addEventListener("click", () => {
     const task = input.value.trim();
-
     if (!task) return;
-
-    tasks.push(task);
-
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-    tasks.forEach(task => {
-         l = document.createElement("li");
-         div = document.createElement("div");
-         compl =  document.createElement("button");
-         del =  document.createElement("button");
-        compl.classList.add("complete-btn");
-        del.classList.add("delete-btn");
-        compl.style.visibility="visible";
-        compl.innerText="✔";
-        del.style.visibility="visible";
-        del.innerText="✖";
-       div.classList.add("actions");
-       div.appendChild(compl);
-       div.appendChild(del);
-        l.textContent=(task);
-        l.appendChild(div);
-        
-        l.classList.add("task")
-        list.appendChild(l);
-        list.style.display="initial";
-        todo.appendChild(list);
-        
-    });
-  
-
     
-
+    tasks.push(task);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
     input.value = "";
+    renderTasks();
 });
 
-// localStorage.removeItem("tasks");
+renderTasks();
