@@ -1,82 +1,53 @@
-let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-const btn = document.getElementById("addBtn");
-const input = document.getElementById("taskInput");
-const list = document.getElementById("taskList");
+const addBtn = document.querySelector("#addBtn");
+const todoContainer = document.querySelector(".todo-container");
+const inputBox = document.querySelector("#taskInput");
+const taskList = document.querySelector("#taskList");
+let tasks=localStorage.getItem("tasks") ? JSON.parse(localStorage.getItem("tasks")) : [];
+function createTask(taskText) {
 
-btn.addEventListener("click", () => {
-    const task = input.value.trim();
+    // <li class="task">
+    const li = document.createElement("li");
+    li.classList.add("task");
+
+    // <span>Task Name</span>
+    const span = document.createElement("span");
+    span.textContent = taskText;
+
+    // <div class="actions">
+    const actions = document.createElement("div");
+    actions.classList.add("actions");
+
+    // <button class="complete-btn">✔</button>
+    const completeBtn = document.createElement("button");
+    completeBtn.classList.add("complete-btn");
+    completeBtn.textContent = "✔";
+    completeBtn.style.visibility = "visible";
+    // <button class="delete-btn">✖</button>
+    const deleteBtn = document.createElement("button");
+    deleteBtn.classList.add("delete-btn");
+    deleteBtn.textContent = "✖";
+    deleteBtn.style.visibility = "visible";
+
+    // Append buttons to actions div
+    actions.appendChild(completeBtn);
+    actions.appendChild(deleteBtn);
+
+    // Append span and actions to li
+    li.appendChild(span);
+    li.appendChild(actions);
+
+    // Append li to ul
+    taskList.appendChild(li);
+}
+addBtn.addEventListener("click", () => {
+    const task = inputBox.value.trim();
 
     if (!task) return;
 
     tasks.push(task);
-
+    createTask(task);
     localStorage.setItem("tasks", JSON.stringify(tasks));
-    tasks.forEach(task => {
-         l = document.createElement("li");
-         div = document.createElement("div");
-         compl =  document.createElement("button");
-         del =  document.createElement("button");
-        compl.classList.add("complete-btn");
-        del.classList.add("delete-btn");
-        compl.style.visibility="visible";
-        compl.innerText="✔";
-        del.style.visibility="visible";
-        del.innerText="✖";
-       div.classList.add("actions");
-       div.appendChild(compl);
-       div.appendChild(del);
-        l.textContent=(task);
-        l.appendChild(div);
-        
-        l.classList.add("task")
-        list.appendChild(l);
-        list.style.display="initial";
-        todo.appendChild(list);
-        
-    });
-  
-
-    
-
-    input.value = "";
+    inputBox.value = "";
+   
 });
-
-// Fixed: Render tasks on page load and add event listeners
-function renderTasks() {
-    list.innerHTML = "";
-    tasks.forEach((task, index) => {
-        const l = document.createElement("li");
-        const div = document.createElement("div");
-        const compl = document.createElement("button");
-        const del = document.createElement("button");
-        
-        compl.classList.add("complete-btn");
-        del.classList.add("delete-btn");
-        compl.innerText = "✔";
-        del.innerText = "✖";
-        
-        div.classList.add("actions");
-        div.appendChild(compl);
-        div.appendChild(del);
-        
-        l.textContent = task;
-        l.appendChild(div);
-        l.classList.add("task");
-        
-        compl.addEventListener("click", () => {
-            l.classList.toggle("completed");
-        });
-        
-        del.addEventListener("click", () => {
-            tasks.splice(index, 1);
-            localStorage.setItem("tasks", JSON.stringify(tasks));
-            renderTasks();
-        });
-        
-        list.appendChild(l);
-    });
-    
-    list.style.display = tasks.length > 0 ? "block" : "none";
-}
-
-renderTasks();
+// localStorage.removeItem("tasks");
