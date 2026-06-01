@@ -298,3 +298,6 @@ h1{
 .task:hover .delete-btn{
     visibility:visible;
 }
+#taskList:empty {
+    display: none;
+}
